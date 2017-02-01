@@ -13,9 +13,34 @@ public class CalculatorTest {
 	private Calculator calculator;
 	private static final double DELTA = 0.01;
 	
+	@DataProvider(name = "dataForSum")
+	public Object[][] dataForSum() {
+		return new Object[][] {
+				{0, 0, 0},
+				{-1, 0, -1},
+				{-10, 10, 0},
+				{2, 2, 4}
+		};	
+	}
+	
+	@DataProvider(name = "dataForMult")
+	public Object[][] dataForMult() {
+		return new Object[][] {
+				{0, 0, 0},
+				{-1, 0, 0},
+				{-10, 10, -100},
+				{2, 2, 4}
+		};	
+	}	
+	
 	@BeforeClass
 	public void setUp(){
 		calculator = new Calculator();
+	}
+	
+	@AfterClass
+	public void cleanUp() {
+		calculator = null;
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class, dependsOnGroups = {"basic"})
@@ -29,30 +54,11 @@ public class CalculatorTest {
 		Assert.assertEquals(result, expected);
 	}
 	
-	@DataProvider(name = "dataForSum")
-	public Object[][] dataForSum() {
-		return new Object[][] {
-				{0, 0, 0},
-				{-1, 0, -1},
-				{-10, 10, 0},
-				{2, 2, 4}
-		};	
-	}
-	
+		
 	@Test(dataProvider = "dataForMult", groups = {"basic"})
 	public void testMult(long first, long second, long expected) {
 		long result = calculator.mult(first, second);
 		Assert.assertEquals(result, expected);
-	}
-	
-	@DataProvider(name = "dataForMult")
-	public Object[][] dataForMult() {
-		return new Object[][] {
-				{0, 0, 0},
-				{-1, 0, 0},
-				{-10, 10, -100},
-				{2, 2, 4}
-		};	
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
@@ -73,7 +79,7 @@ public class CalculatorTest {
 	}
 	
 	@Test
-	public void testNullNotEqualPositiveOrNegative() {
+	public void testZeroNotEqualPositiveOrNegative() {
 		boolean neg = calculator.isNegative(0);
 		boolean pos = calculator.isPositive(0);
 		Assert.assertFalse(neg && pos);
@@ -88,12 +94,5 @@ public class CalculatorTest {
 	public void testCos() {
 		double result = calculator.cos(1);
 		Assert.assertEquals(result, 0.540, DELTA);		
-	}
-	
-		
-	@AfterClass
-	public void cleanUp() {
-		calculator = null;
-	}
-	
+	}	
 }
